@@ -62,6 +62,11 @@ public class ZipFileUtil {
                         }
                     }
                     zaos.finish();
+
+                    File FinalzipFile = new File(zipFilePath);
+                    if (FinalzipFile.exists()){
+                        FinalzipFile.delete();
+                    }
                     zipFile.renameTo(new File(zipFilePath));
                     System.out.println("Compress Finished");
                 }catch(Exception e){
@@ -164,5 +169,4 @@ public class ZipFileUtil {
         }
         return files;
     }
-
 }

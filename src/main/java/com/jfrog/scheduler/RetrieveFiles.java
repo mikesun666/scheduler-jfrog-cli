@@ -22,15 +22,16 @@ public class RetrieveFiles {
         String downloadType = pps.getProperty("DOWNLOAD_TYPE");
         String downloadTarget = pps.getProperty("DOWNLOAD_TARGET");
         String locationTarget = pps.getProperty("LOCATION_TARGET");
-        String flat = pps.getProperty("FLAT");
-        String thread_number = pps.getProperty("THREAD_NUMBER");
-        flat = "--flat=" + flat;
-        thread_number = "--threads=" + thread_number;
+        String flat = "--flat=" + pps.getProperty("FLAT");
+        String thread_number = "--threads=" + pps.getProperty("THREAD_NUMBER");
+        String server_id = "--server-id=" + pps.getProperty("SERVER_ID");
+
 
         if (downloadType.equals("downloadFolder")) {
             downloadTarget = downloadTarget.endsWith("/") ? downloadTarget : downloadTarget + "/";
             if (locationTarget == null || locationTarget.length() == 0) {
                 System.out.println("LOCATION_TARGET is null ,download file to current path");
+                locationTarget = "";
             } else {
                 locationTarget = locationTarget.endsWith("/") ? locationTarget : locationTarget + "/";
             }
@@ -41,7 +42,7 @@ public class RetrieveFiles {
             System.out.println("Command or parameter is incorrect, please check again.");
             System.exit(-1);
         }
-        command = command + " " + downloadTarget + " " + locationTarget + " " + flat + " " + thread_number;
+        command = command + " " + downloadTarget + " " + locationTarget + " " + flat + " " + thread_number + " " + server_id ;
         ProcessBuilderCMD pbcmd = new ProcessBuilderCMD();
         pbcmd.processBuilderCommand(command, logfile, pps);
 
