@@ -1,5 +1,6 @@
 package com.jfrog.scheduler;
 
+import jnr.posix.POSIXFactory;
 import sun.java2d.pipe.ShapeSpanIterator;
 
 import javax.rmi.ssl.SslRMIClientSocketFactory;
@@ -10,44 +11,42 @@ import java.util.Properties;
 public class MainTask {
     public static void main(String[] args) {
 
-        DeleteItem delete = new DeleteItem ();
+        DeleteItem delete = new DeleteItem();
         Properties pps = loadProperties(args);
 
         String locationTarget = pps.getProperty("LOCATION_TARGET");
         String downloadTarget = pps.getProperty("DOWNLOAD_TARGET");
         String zipFileName = pps.getProperty("ZIP_FILENAME");
+        zipFileName = (zipFileName == null || zipFileName.equals("")) ? downloadTarget.split("/")[1] : zipFileName;
 
         if (locationTarget == null || locationTarget.equals("")) {
-            downloadTarget = downloadTarget.split("/")[1];
+            delete.deleteDir(new File(downloadTarget));
         } else {
-            downloadTarget = locationTarget;
+            delete.deleteDir(new File(locationTarget + zipFileName));
         }
 
+
+        System.out.println("DOWNLOAD_TARGET: " + downloadTarget);
+        System.out.println("ZIP_FILENAME: " + zipFileName);
+        POSIXFactory.getPOSIX().chdir(locationTarget);
         //清理原有文件
-        delete.deleteFile(downloadTarget+".success");
-        delete.deleteFile(downloadTarget+".failure");
-        delete.deleteDir(new File(downloadTarget));
-
-        if (null == zipFileName || zipFileName.length() <= 0) {
-            zipFileName = downloadTarget + ".zip";
-        } else {
-            System.out.println("1");
-            zipFileName += ".zip";
-        }
-        delete.deleteDir(new File(downloadTarget));
+        delete.deleteFile(zipFileName + ".success");
+        delete.deleteFile(zipFileName + ".failure");
+        delete.deleteDir(new File(zipFileName));
 
 
-//        下载文件
+        // 下载文件
         RetrieveFiles rf = new RetrieveFiles();
         rf.Download(pps);
-//        压缩文件
+        // 压缩文件
 
         ZipFileUtil zfu = new ZipFileUtil();
         ArrayList<File> files = new ArrayList<>();
 
-        zfu.compressFiles2Zip(zfu.getFiles(downloadTarget, files), zipFileName);
-        FinishStatus.success(downloadTarget);
-        delete.deleteDir(new File(downloadTarget));
+        zfu.compressFiles2Zip(zfu.getFiles(zipFileName, files), zipFileName);
+        FinishStatus.success(zipFileName);
+        delete.deleteDir(new File(zipFileName));
+
 
     }
 

@@ -6,7 +6,7 @@
 
     <groupId>com.jfrog</groupId>
     <artifactId>scheduler-jfrog-cli</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
 
     <dependencies>
         <dependency>
@@ -23,6 +23,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.19</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-posix</artifactId>
+            <version>3.0.46</version>
         </dependency>
     </dependencies>
 

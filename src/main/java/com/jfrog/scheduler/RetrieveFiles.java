@@ -57,7 +57,6 @@ public class RetrieveFiles {
                     System.out.println(result);
                     System.out.println("download completed");
                 } else {
-
                     System.out.println(result);
                     System.out.println("download error");
                     System.exit(-1);
