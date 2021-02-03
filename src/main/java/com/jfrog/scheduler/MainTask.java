@@ -19,19 +19,23 @@ public class MainTask {
         String zipFileName = pps.getProperty("ZIP_FILENAME");
         zipFileName = (zipFileName == null || zipFileName.equals("")) ? downloadTarget.split("/")[1] : zipFileName;
 
-        if (locationTarget == null || locationTarget.equals("")) {
-            delete.deleteDir(new File(downloadTarget));
-        } else {
-            delete.deleteDir(new File(locationTarget + zipFileName));
-        }
-
-
         System.out.println("DOWNLOAD_TARGET: " + downloadTarget);
         System.out.println("ZIP_FILENAME: " + zipFileName);
-        POSIXFactory.getPOSIX().chdir(locationTarget);
+
         //清理原有文件
+        if (locationTarget == null || locationTarget.equals("")) {
+            System.out.println("LOCATION_TARGET is null");
+        } else {
+            POSIXFactory.getPOSIX().chdir(locationTarget);
+            System.out.println("Change work folder to "+ locationTarget);
+
+        }
+        delete.deleteDir(new File(downloadTarget));
         delete.deleteFile(zipFileName + ".success");
         delete.deleteFile(zipFileName + ".failure");
+
+
+
         delete.deleteDir(new File(zipFileName));
 
 
