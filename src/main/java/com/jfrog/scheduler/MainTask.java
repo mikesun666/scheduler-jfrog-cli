@@ -17,7 +17,8 @@ public class MainTask {
         String locationTarget = pps.getProperty("LOCATION_TARGET");
         String downloadTarget = pps.getProperty("DOWNLOAD_TARGET");
         String zipFileName = pps.getProperty("ZIP_FILENAME");
-        zipFileName = (zipFileName == null || zipFileName.equals("")) ? downloadTarget.split("/")[1] : zipFileName;
+        String dirName = downloadTarget.split("/")[1];
+        zipFileName = (zipFileName == null || zipFileName.equals("")) ? dirName : zipFileName;
 
         System.out.println("DOWNLOAD_TARGET: " + downloadTarget);
         System.out.println("ZIP_FILENAME: " + zipFileName);
@@ -25,15 +26,15 @@ public class MainTask {
         //清理原有文件
         if (locationTarget == null || locationTarget.equals("")) {
             System.out.println("LOCATION_TARGET is null");
+            locationTarget = "";
         } else {
             POSIXFactory.getPOSIX().chdir(locationTarget);
-            System.out.println("Change work folder to "+ locationTarget);
+            System.out.println("Change work folder to " + locationTarget);
 
         }
-        delete.deleteDir(new File(downloadTarget));
-        delete.deleteFile(zipFileName + ".success");
-        delete.deleteFile(zipFileName + ".failure");
-
+        System.out.println("删除原目录：" + delete.deleteDir(new File(dirName)));
+        System.out.println("删除Success文件：" + delete.deleteFile(zipFileName + ".success"));
+        System.out.println("删除Failure文件：" + delete.deleteFile(zipFileName + ".failure"));
 
 
         delete.deleteDir(new File(zipFileName));
@@ -47,9 +48,10 @@ public class MainTask {
         ZipFileUtil zfu = new ZipFileUtil();
         ArrayList<File> files = new ArrayList<>();
 
-        zfu.compressFiles2Zip(zfu.getFiles(zipFileName, files), zipFileName);
+        zfu.compressFiles2Zip(zfu.getFiles(dirName, files), zipFileName, locationTarget);
+
         FinishStatus.success(zipFileName);
-        delete.deleteDir(new File(zipFileName));
+        delete.deleteDir(new File(dirName));
 
 
     }

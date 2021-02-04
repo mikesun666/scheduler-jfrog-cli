@@ -20,11 +20,11 @@ public class ZipFileUtil {
      * 把文件压缩成zip格式
      *
      * @param files       需要压缩的文件
-     * @param zipFilePath 压缩后的zip文件路径   ,如"D:/test/aa.zip";
+     * @param zipFileName 压缩后的zip文件路径   ,如"D:/test/aa.zip";
      */
-    public void compressFiles2Zip(ArrayList<File> files, String zipFilePath) {
+    public void compressFiles2Zip(ArrayList<File> files, String zipFileName, String locationTarget) {
         if (files != null && files.size() > 0) {
-            String tempfileName = zipFilePath + ".tmp";
+            String tempfileName = locationTarget + zipFileName + ".tmp";
             ZipArchiveOutputStream zaos = null;
             try {
                 File zipFile = new File(tempfileName);
@@ -38,7 +38,7 @@ public class ZipFileUtil {
                 for (File file : files) {
                     if (file != null) {
                         ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(file, file.getPath());
-                        System.out.println(file.getPath());
+                        //System.out.println(file.getPath());
                         zaos.putArchiveEntry(zipArchiveEntry);
                         InputStream is = null;
                         try {
@@ -62,11 +62,11 @@ public class ZipFileUtil {
                 }
                 zaos.finish();
 
-                File FinalzipFile = new File(zipFilePath + ".zip");
+                File FinalzipFile = new File(locationTarget + zipFileName + ".zip");
                 if (FinalzipFile.exists()) {
                     FinalzipFile.delete();
                 }
-                zipFile.renameTo(new File(zipFilePath + ".zip"));
+                zipFile.renameTo(new File(locationTarget + zipFileName + ".zip"));
                 System.out.println("Compress Finished");
             } catch (Exception e) {
                 e.printStackTrace();
