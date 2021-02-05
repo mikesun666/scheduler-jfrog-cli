@@ -49,8 +49,11 @@ public class MainTask {
         ArrayList<File> files = new ArrayList<>();
 
         zfu.compressFiles2Zip(zfu.getFiles(dirName, files), zipFileName, locationTarget);
-
-        FinishStatus.success(zipFileName);
+        if (new File(zipFileName+".zip").exists()) {
+            FinishStatus.success(zipFileName);
+        } else {
+            FinishStatus.failure(zipFileName);
+        }
         delete.deleteDir(new File(dirName));
 
 
